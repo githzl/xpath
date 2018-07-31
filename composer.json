@@ -2,7 +2,7 @@
     "name": "githzl/xpath",
     "description": "基于xpath的页面提取",
     "type": "library",
-    "license": "open source",
+    "license": "MIT",
     "authors": [
         {
             "name": "githzl",

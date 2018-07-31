@@ -1,6 +1,6 @@
 <?php
 
-namespace XPath\Lib\XPath;
+namespace GithzlXPath\Lib;
 
 
 class XPath{

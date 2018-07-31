@@ -15,7 +15,7 @@
     },
     "autoload":{
       "psr-4":{
-	  "XPath\\Lib\\": "src/XPath/Lib"
+	  "GithzlXPath\\Lib\\": "src/XPath/Lib"
       }
     }
 }

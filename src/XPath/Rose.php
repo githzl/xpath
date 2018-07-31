@@ -8,4 +8,8 @@ class Rose
     {
         echo "this a test";
     }
+    public function test()
+    {
+   	echo 'this is test func';
+    }
 }

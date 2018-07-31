@@ -6,6 +6,6 @@ class Rose
 {
     public function desc()
     {
-        echo "this as is test";
+        echo "this  is test";
     }
 }

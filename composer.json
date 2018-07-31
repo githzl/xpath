@@ -1,0 +1,21 @@
+{
+    "name": "githzl/xpath",
+    "description": "基于xpath的页面提取",
+    "type": "library",
+    "license": "open source",
+    "authors": [
+        {
+            "name": "githzl",
+            "email": "newhzl@163.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {
+    	"php": ">=7.0"
+    },
+    "autoload": {
+      "psr-4": {
+        "XPath\\Rose\\": "src/Xpath/Rose"
+    }
+  }
+}

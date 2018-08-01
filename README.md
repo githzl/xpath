@@ -1,288 +1,32 @@
 
-Build Status Latest Stable Version Total Downloads
+快速入门
 
-Official low-level client for Elasticsearch. Its goal is to provide common ground for all Elasticsearch-related code in PHP; because of this it tries to be opinion-free and very extendable.
 
-To maintain consistency across all the low-level clients (Ruby, Python, etc.), clients accept simple associative arrays as parameters. All parameters, from the URI to the document body, are defined in the associative array.
-
-Features
-One-to-one mapping with REST API and other language clients
-Configurable, automatic discovery of cluster nodes
-Persistent, Keep-Alive connections (within the lifetime of the script)
-Load balancing (with pluggable selection strategy) across all available nodes. Defaults to round-robin
-Pluggable connection pools to offer different connection strategies
-Generalized, pluggable architecture - most components can be replaced with your own custom class if specialized behavior is required
-Option to use asynchronous future, which enables parallel execution of curl requests to multiple nodes
-Note: If you want to use X-Pack API, you need to install an optional extension elasticsearch/xpack.
-
-Version Matrix
-Elasticsearch Version	Elasticsearch-PHP Branch
->= 6.0	6.0
->= 5.0, < 6.0	5.0
->= 2.0, < 5.0	1.0 or 2.0
->= 1.0, < 2.0	1.0 or 2.0
-<= 0.90.x	0.4
-If you are using Elasticsearch 6.0+ , use Elasticsearch-PHP 6.0 branch.
-If you are using Elasticsearch 5.x , use Elasticsearch-PHP 5.0 branch.
-If you are using Elasticsearch 1.x or 2.x, prefer using the Elasticsearch-PHP 2.0 branch. The 1.0 branch is compatible however.
-If you are using a version older than 1.0, you must install the 0.4 Elasticsearch-PHP branch. Since ES 0.90.x and below is now EOL, the corresponding 0.4 branch will not receive any more development or bugfixes. Please upgrade.
-You should never use Elasticsearch-PHP Master branch, as it tracks Elasticsearch master and may contain incomplete features or breaks in backwards compatibility. Only use ES-PHP master if you are developing against ES master for some reason.
-Documentation
-Full documentation can be found here. Docs are stored within the repo under /docs/, so if you see a typo or problem, please submit a PR to fix it!
-
-Installation via Composer
-The recommended method to install Elasticsearch-PHP is through Composer.
-
-Add elasticsearch/elasticsearch as a dependency in your project's composer.json file (change version to suit your version of Elasticsearch):
 
     {
         "require": {
-            "elasticsearch/elasticsearch": "~6.0"
+            "githzl/xpath": "dev-master"
         }
     }
-Download and install Composer:
-
-    curl -s http://getcomposer.org/installer | php
-Install your dependencies:
-
-    php composer.phar install
-Require Composer's autoloader
-
-Composer also prepares an autoload file that's capable of autoloading all the classes in any of the libraries that it downloads. To use it, just add the following line to your code's bootstrap process:
+demo演示
 
     <?php
 
-    use Elasticsearch\ClientBuilder;
-
     require 'vendor/autoload.php';
+    
+    use GithzlXPath\Lib\XPath;
+    
+    $html = file_get_contents('https://www.zhipin.com'); // 获取到html  
+    $xpath = new XPath($html);
+    
+    echo $title = $xpath->getTitle();  // BOSS直聘-互联网招聘神器！
+    
+    echo $link = $xpath->query('//*[@id="wrap"]/div[4]/dl/dd/a[1]')->getNodeValue(); // 慧聪网
+    
+    echo $attr = $xpath->query('//*[@id="wrap"]/div[4]/dl/dd/a[1]')->getAttrValue('href'); // https://www.hc360.com
+    
 
-    $client = ClientBuilder::create()->build();
-You can find out more on how to install Composer, configure autoloading, and other best-practices for defining dependencies at getcomposer.org.
-
-PHP Version Requirement
-Version 6.0 of this library requires at least PHP version 7.0.0 to function. In addition, it requires the native JSON extension to be version 1.3.7 or higher.
-
-Elasticsearch-PHP Branch	PHP Version
-6.0	>= 7.0.0
-5.0	>= 5.6.6
-2.0	>= 5.4.0
-0.4, 1.0	>= 5.3.9
-Quickstart
-Index a document
-In elasticsearch-php, almost everything is configured by associative arrays. The REST endpoint, document and optional parameters - everything is an associative array.
-
-To index a document, we need to specify four pieces of information: index, type, id and a document body. This is done by constructing an associative array of key:value pairs. The request body is itself an associative array with key:value pairs corresponding to the data in your document:
-
-$params = [
-    'index' => 'my_index',
-    'type' => 'my_type',
-    'id' => 'my_id',
-    'body' => ['testField' => 'abc']
-];
-
-$response = $client->index($params);
-print_r($response);
-The response that you get back indicates the document was created in the index that you specified. The response is an associative array containing a decoded version of the JSON that Elasticsearch returns:
-
-Array
-(
-    [_index] => my_index
-    [_type] => my_type
-    [_id] => my_id
-    [_version] => 1
-    [created] => 1
-)
-Get a document
-Let's get the document that we just indexed. This will simply return the document:
-
-$params = [
-    'index' => 'my_index',
-    'type' => 'my_type',
-    'id' => 'my_id'
-];
-
-$response = $client->get($params);
-print_r($response);
-The response contains some metadata (index, type, etc.) as well as a _source field...this is the original document that you sent to Elasticsearch.
-
-Array
-(
-    [_index] => my_index
-    [_type] => my_type
-    [_id] => my_id
-    [_version] => 1
-    [found] => 1
-    [_source] => Array
-        (
-            [testField] => abc
-        )
-
-)
-If you want to retrieve the _source field directly, there is the getSource method:
-
-$params = [
-    'index' => 'my_index',
-    'type' => 'my_type',
-    'id' => 'my_id'
-];
-
-$source = $client->getSource($params);
-doSomething($source);
-Search for a document
-Searching is a hallmark of Elasticsearch, so let's perform a search. We are going to use the Match query as a demonstration:
-
-$params = [
-    'index' => 'my_index',
-    'type' => 'my_type',
-    'body' => [
-        'query' => [
-            'match' => [
-                'testField' => 'abc'
-            ]
-        ]
-    ]
-];
-
-$response = $client->search($params);
-print_r($response);
-The response is a little different from the previous responses. We see some metadata (took, timed_out, etc.) and an array named hits. This represents your search results. Inside of hits is another array named hits, which contains individual search results:
-
-Array
-(
-    [took] => 1
-    [timed_out] =>
-    [_shards] => Array
-        (
-            [total] => 5
-            [successful] => 5
-            [failed] => 0
-        )
-
-    [hits] => Array
-        (
-            [total] => 1
-            [max_score] => 0.30685282
-            [hits] => Array
-                (
-                    [0] => Array
-                        (
-                            [_index] => my_index
-                            [_type] => my_type
-                            [_id] => my_id
-                            [_score] => 0.30685282
-                            [_source] => Array
-                                (
-                                    [testField] => abc
-                                )
-                        )
-                )
-        )
-)
-Delete a document
-Alright, let's go ahead and delete the document that we added previously:
-
-$params = [
-    'index' => 'my_index',
-    'type' => 'my_type',
-    'id' => 'my_id'
-];
-
-$response = $client->delete($params);
-print_r($response);
-You'll notice this is identical syntax to the get syntax. The only difference is the operation: delete instead of get. The response will confirm the document was deleted:
-
-Array
-(
-    [found] => 1
-    [_index] => my_index
-    [_type] => my_type
-    [_id] => my_id
-    [_version] => 2
-)
-Delete an index
-Due to the dynamic nature of Elasticsearch, the first document we added automatically built an index with some default settings. Let's delete that index because we want to specify our own settings later:
-
-$deleteParams = [
-    'index' => 'my_index'
-];
-$response = $client->indices()->delete($deleteParams);
-print_r($response);
-The response:
-
-Array
-(
-    [acknowledged] => 1
-)
-Create an index
-Now that we are starting fresh (no data or index), let's add a new index with some custom settings:
-
-$params = [
-    'index' => 'my_index',
-    'body' => [
-        'settings' => [
-            'number_of_shards' => 2,
-            'number_of_replicas' => 0
-        ]
-    ]
-];
-
-$response = $client->indices()->create($params);
-print_r($response);
-Elasticsearch will now create that index with your chosen settings, and return an acknowledgement:
-
-Array
-(
-    [acknowledged] => 1
-)
-Unit Testing using Mock a Elastic Client
-use GuzzleHttp\Ring\Client\MockHandler;
-use Elasticsearch\ClientBuilder;
-
-// The connection class requires 'body' to be a file stream handle
-// Depending on what kind of request you do, you may need to set more values here
-$handler = new MockHandler([
-  'status' => 200,
-  'transfer_stats' => [
-     'total_time' => 100
-  ],
-  'body' => fopen('somefile.json')
-]);
-$builder = ClientBuilder::create();
-$builder->setHosts(['somehost']);
-$builder->setHandler($handler);
-$client = $builder->build();
-// Do a request and you'll get back the 'body' response above
-Wrap up
-That was just a crash-course overview of the client and its syntax. If you are familiar with Elasticsearch, you'll notice that the methods are named just like REST endpoints.
-
-You'll also notice that the client is configured in a manner that facilitates easy discovery via the IDE. All core actions are available under the $client object (indexing, searching, getting, etc.). Index and cluster management are located under the $client->indices() and $client->cluster() objects, respectively.
-
-Check out the rest of the Documentation to see how the entire client works.
-
-Available Licenses
-Starting with version 1.3.1, Elasticsearch-PHP is available under two licenses: Apache v2.0 and LGPL v2.1. Versions prior to 1.3.1 are still licensed with only Apache v2.0.
-
-The user may choose which license they wish to use. Since there is no discriminating executable or distribution bundle to differentiate licensing, the user should document their license choice externally, in case the library is re-distributed. If no explicit choice is made, assumption is that redistribution obeys rules of both licenses.
-
-Contributions
-All contributions to the library are to be so that they can be licensed under both licenses.
-
-Apache v2.0 License:
-
-Copyright 2013-2016 Elasticsearch
-
-Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
-
-http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License.
-
-LGPL v2.1 Notice:
-
-Copyright (C) 2013-2016 Elasticsearch
-
-This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser General Public License as published by the Free Software Foundation; either version 2.1 of the License, or (at your option) any later version.
-
-This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
-
-You should have received a copy of the GNU Lesser General Public License along with this library; if not, write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA
+快捷方法获取xpath query
+  1.谷歌浏览器安装扩展：XPath Helper
+  2.页面中打开控制台选择dom模块
+  3.选择要提取的数据右键copy->copy xpath

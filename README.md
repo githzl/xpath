@@ -1,5 +1,5 @@
 
-快速入门
+1.快速入门
 
 
 
@@ -8,7 +8,7 @@
             "githzl/xpath": "dev-master"
         }
     }
-demo演示
+2.demo演示
 
     <?php
 
@@ -26,10 +26,13 @@ demo演示
     echo $attr = $xpath->query('//*[@id="wrap"]/div[4]/dl/dd/a[1]')->getAttrValue('href'); // https://www.hc360.com
     
 
-快捷方法获取xpath query
+3.快捷方法获取xpath query
 
-  1.谷歌浏览器安装扩展：XPath Helper
+    1.谷歌浏览器安装扩展：XPath Helper
   
-  2.页面中打开控制台选择dom模块
+    2.页面中打开控制台选择dom模块
   
-  3.选择要提取的数据右键copy->copy xpath
+    3.选择要提取的数据右键copy->copy xpath
+    
+ 
+＃＃＃ 如果又帮助到你或学习到新知识 请点 Star

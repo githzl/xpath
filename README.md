@@ -27,6 +27,9 @@ demo演示
     
 
 快捷方法获取xpath query
+
   1.谷歌浏览器安装扩展：XPath Helper
+  
   2.页面中打开控制台选择dom模块
+  
   3.选择要提取的数据右键copy->copy xpath

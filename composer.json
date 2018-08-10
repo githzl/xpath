@@ -12,6 +12,7 @@
     "require": {
       "php": ">=7.0"	
     },
+    "minimum-stability" : "stable",
     "autoload":{
       "psr-4":{
 	  "GithzlXPath\\Lib\\": "src/XPath/Lib"

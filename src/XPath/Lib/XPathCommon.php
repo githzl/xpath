@@ -87,7 +87,7 @@ class XPathCommon{
     public function getLastChildNodeValue($tag)
     {
         if(!$tag){
-            throw new \Exception('getFirstChildNodeValue function need param tag');
+            throw new \Exception('getLastChildNodeValue function need param tag');
         }
         $query = static::$query.'/'.$tag;
         $length = $this->xpath->query($query)->length;
@@ -106,7 +106,7 @@ class XPathCommon{
     public function getAllChildNodeValue($tag)
     {
         if(!$tag){
-            throw new \Exception('getFirstChildNodeValue function need param tag');
+            throw new \Exception('getAllChildNodeValue function need param tag');
         }
         $arr = [];
         $query = static::$query.'/'.$tag;
@@ -127,7 +127,7 @@ class XPathCommon{
     public function getAllChildNodeCount($tag)
     {
         if(!$tag){
-            throw new \Exception('getFirstChildNodeValue function need param tag');
+            throw new \Exception('getAllChildNodeCount function need param tag');
         }
         $query = static::$query.'/'.$tag;
         $count = $this->xpath->query($query)->length;

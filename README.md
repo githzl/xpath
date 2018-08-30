@@ -5,7 +5,7 @@
 
     {
         "require": {
-            "githzl/xpath": "dev-master"
+            "githzl/xpath": "^1.0"
         }
     }
 2.demo演示

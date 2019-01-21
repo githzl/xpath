@@ -8,7 +8,7 @@
             "githzl/xpath": "^1.0"
         }
     }
-2.demo演示
+2.使用演示
 
     <?php
 
